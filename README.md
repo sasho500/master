@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the FullStackApp repository! This project is the cornerstone of my Master's degree and serves as a practical framework for learning how to build and secure web applications against various types of cyber threats using Kali Linux.
+Welcome to the Master's degree project! This project is the cornerstone of my Master's degree and serves as a practical framework for learning how to build and secure web applications against various types of cyber threats using Kali Linux.
 
 This full-stack web application leverages **Nest.js** for the backend and **Angular** with Server-Side Rendering (SSR) for the frontend, providing an optimized user experience and efficient data handling.
 
