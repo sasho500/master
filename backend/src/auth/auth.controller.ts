@@ -37,6 +37,11 @@ export class AuthController {
   @Get('logout')
   logout(@Request() req, @Response() res) {
     // Implement logout logic, possibly clearing a token or a session
-    res.json({ message: 'Logout successful' });
+    res.cookie('auth_token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development', // Secure flag in production
+      expires: new Date(0), // Set expiration to past date to delete the cookie
+    });
+    return res.status(200).json({ message: 'Logout successful' });
   }
 }
