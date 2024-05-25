@@ -31,7 +31,8 @@ export class AuthController {
         .status(HttpStatus.BAD_REQUEST)
         .json({ message: 'User could not be created' });
     }
-    return res.status(HttpStatus.CREATED).json(user);
+    const token = await this.authService.validateUser(req.body);
+    return res.status(HttpStatus.CREATED).json({ user, token });
   }
 
   @Get('logout')

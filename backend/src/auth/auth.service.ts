@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
-  private users = [{ username: 'test', password: 'test' }]; // Example user, replace with DB access
+  constructor(private usersService: UsersService) {}
 
   async validateUser(credentials): Promise<string> {
-    const user = this.users.find(
-      (u) =>
-        u.username === credentials.username &&
-        u.password === credentials.password,
-    );
+    const user = await this.usersService.validateLogin(credentials.username, credentials.password);
     if (user) {
       return jwt.sign({ username: user.username }, 'secretKey', {
         expiresIn: '1h',
@@ -19,9 +17,8 @@ export class AuthService {
     return null;
   }
 
-  async createUser(data): Promise<any> {
-    // Add user creation logic here
-    return { id: Date.now(), ...data };
+  async createUser(data): Promise<User> {
+    return this.usersService.create(data);
   }
 
   decodeToken(token): any {
