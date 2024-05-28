@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 
 @Injectable()
@@ -69,7 +70,10 @@ export class UsersService {
 
     async validateLogin(username: string, password: string): Promise<User | null> {
       const user = await this.usersRepository.findOne({ where: { username, password } }); // Add hashing for password
-      return user ? user : null;
+      if (user && await bcrypt.compare(password, user.password)) {
+        return user;
+      }
+      return null;
     }
 
     async create(userData: Partial<User>): Promise<User> {
