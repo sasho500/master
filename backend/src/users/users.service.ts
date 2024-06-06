@@ -25,27 +25,37 @@ export class UsersService {
     }
 
     async findOne(key: string): Promise<User> {
-      try {
-        const user = await this.usersRepository.findOne({ where: { key } });
-        if (user) {
-            this.logger.log(`Found user: ${JSON.stringify(user)}`);
-        } else {
-            this.logger.log('No user found with the given key');
+        try {
+            const user = await this.usersRepository.findOne({ where: { key } });
+            if (user) {
+                this.logger.log(`Found user: ${JSON.stringify(user)}`);
+            } else {
+                this.logger.log('No user found with the given key');
+            }
+            return user;
+        } catch (error) {
+            this.logger.error(`Error finding user with key ${key}`, error.stack);
+            throw error;
         }
-        return user;
-    } catch (error) {
-        this.logger.error(`Error finding user with key ${key}`, error.stack);
-        throw error;
     }
-    }
-
     async update(key: string, userData: Partial<User>): Promise<User> {
         try {
-            const updateResult = await this.usersRepository.update(key, userData);
-            if (!updateResult.affected) {
-                throw new Error('No user was updated');
+            const user = await this.usersRepository.findOne({ where: { key } });
+            if (!user) {
+                throw new Error('User not found');
             }
-            const updatedUser = await this.usersRepository.findOne({ where: { key: key }});
+    
+            // If key is being updated, ensure it's not duplicating
+            if (userData.key && userData.key !== key) {
+                const existingUserWithNewKey = await this.usersRepository.findOne({ where: { key: userData.key } });
+                if (existingUserWithNewKey) {
+                    throw new Error('Duplicate key value violates unique constraint');
+                }
+            }
+    
+            await this.usersRepository.update(user.user_id, userData);
+            const updatedUser = await this.usersRepository.findOne({ where: { user_id: user.user_id } });
+            
             return updatedUser;
         } catch (error) {
             this.logger.error(`Failed to update user with key ${key}`, error.stack);
@@ -55,7 +65,7 @@ export class UsersService {
 
     async remove(key: string): Promise<void> {
         try {
-            const deleteResult = await this.usersRepository.delete(key);
+            const deleteResult = await this.usersRepository.delete({ key });
             if (!deleteResult.affected) {
                 throw new Error('No user was deleted');
             }
@@ -69,15 +79,23 @@ export class UsersService {
     }
 
     async validateLogin(username: string, password: string): Promise<User | null> {
-      const user = await this.usersRepository.findOne({ where: { username, password } }); // Add hashing for password
-      if (user && await bcrypt.compare(password, user.password)) {
-        return user;
-      }
-      return null;
+        const user = await this.usersRepository.findOne({ where: { username } }); // Find by username
+        if (user && await bcrypt.compare(password, user.password)) {
+            return user;
+        }
+        return null;
     }
-
+    async findByUsername(username: string): Promise<User> {
+        try {
+            const user = await this.usersRepository.findOne({ where: { username } });
+            return user;
+        } catch (error) {
+            this.logger.error(`Error finding user with username ${username}`, error.stack);
+            throw error;
+        }
+    }
     async create(userData: Partial<User>): Promise<User> {
-      const newUser = this.usersRepository.create(userData);
-      return this.usersRepository.save(newUser);
+        const newUser = this.usersRepository.create(userData);
+        return this.usersRepository.save(newUser);
     }
 }
