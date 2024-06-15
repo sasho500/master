@@ -14,8 +14,16 @@ export class ProductsService {
         private usersService: UsersService
     ) {}
 
-    findAll(): Promise<Product[]> {
-        return this.productsRepository.find();
+    findAll(name?: string, gender?: 'F' | 'M'): Promise<Product[]> {
+        const where: any = {};
+        if (name) {
+            where.name = name;
+        }
+        if (gender) {
+            where.gender = gender;
+        }
+
+        return this.productsRepository.find({ where });
     }
 
     findOne(id: number): Promise<Product> {

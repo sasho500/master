@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from './product.entity';
 
@@ -7,8 +7,8 @@ export class ProductsController {
     constructor(private productsService: ProductsService) {}
 
     @Get()
-    getAll(): Promise<Product[]> {
-        return this.productsService.findAll();
+    getAll(@Query('name') name?: string, @Query('gender') gender?: 'F' | 'M'): Promise<Product[]> {
+        return this.productsService.findAll(name, gender);
     }
 
     @Get(':id')
