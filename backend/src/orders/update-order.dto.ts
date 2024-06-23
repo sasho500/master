@@ -12,7 +12,7 @@ class OrderDetailDto {
   subtotal: number;
 }
 
-export class CreateOrderDto {
+export class UpdateOrderDto {
   @IsNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })

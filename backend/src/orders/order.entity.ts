@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
-
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { OrderDetails } from './order-details.entity';
 
 @Entity('orders')
@@ -22,6 +15,8 @@ export class Order {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   total_amount: number;
 
-  @OneToMany(() => OrderDetails, (orderDetails) => orderDetails.order)
+  @OneToMany(() => OrderDetails, (orderDetails) => orderDetails.order, {
+    cascade: true,
+  })
   orderDetails: OrderDetails[];
 }
