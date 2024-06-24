@@ -5,30 +5,40 @@ import {
   Request,
   Response,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
   constructor(private authService: AuthService) {}
 
   @Post('login')
+  @Throttle({ default: { limit: 1, ttl: 6 } })
   async login(@Request() req, @Response() res) {
-    console.log('Login request body:', req.body); // Log request body
+    this.logger.log('Login request received'); // Logging without sensitive data
 
     const token = await this.authService.validateUser(req.body);
-    
+
     if (!token) {
-      console.log('Authentication failed'); // Log failure
+      this.logger.log('Authentication failed'); // Logging without sensitive data
       return res
         .status(HttpStatus.UNAUTHORIZED)
         .json({ message: 'Authentication failed' });
     }
-    console.log('Authentication successful, token:', token); // Log success
+    this.logger.log('Authentication successful'); // Logging without sensitive data
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+    });
     return res.json({ token });
   }
   
   @Post('register')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async register(@Request() req, @Response() res) {
     try {
       const { user, token } = await this.authService.registerAndLogin(req.body);
@@ -38,6 +48,7 @@ export class AuthController {
       });
       return res.status(HttpStatus.CREATED).json({ user, token });
     } catch (error) {
+      this.logger.error('User registration failed', error.stack); // Logging error details
       return res
         .status(HttpStatus.BAD_REQUEST)
         .json({ message: 'User could not be created', error: error.message });
