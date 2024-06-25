@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { IsEmail, Length, IsNotEmpty } from 'class-validator';
+import { IsEmail, Length, IsNotEmpty, IsOptional } from 'class-validator';
 @Entity('users') // Ensure this matches the table name in your database
 export class User {
   @PrimaryGeneratedColumn()
@@ -27,4 +27,12 @@ export class User {
 
   @Column({ length: 255, unique: true })
   key: string;
+
+  @Column({ type: 'int', default: 0 })
+  @IsOptional()
+  failedLoginAttempts: number;
+
+  @Column({ type: 'timestamp', nullable: true })
+  @IsOptional()
+  lockedUntil: Date | null;
 }

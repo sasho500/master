@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException, ForbiddenException  } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -13,6 +13,8 @@ export class UsersService {
         @InjectRepository(User)
         private usersRepository: Repository<User>,
     ) {}
+    private readonly MAX_FAILED_ATTEMPTS = 5;
+    private readonly LOCK_TIME = 1 * 60 * 1000; // 30 minutes
 
     async findAll(): Promise<User[]> {
         try {
@@ -74,14 +76,48 @@ export class UsersService {
             throw new Error('Deletion failed');
         }
     }
-
     async validateLogin(username: string, password: string): Promise<User | null> {
         const user = await this.usersRepository.findOne({ where: { username } });
-        if (user && await bcrypt.compare(password, user.password)) {
-            return user;
+        if (!user) {
+            this.logger.log(`User not found with username: ${username}`);
+            await this.delayResponse();
+            return null;
         }
-        return null;
+
+        if (user.lockedUntil && user.lockedUntil > new Date()) {
+            this.logger.warn(`Account is locked until ${user.lockedUntil}`);
+            throw new ForbiddenException('Account is temporarily locked');
+        }
+
+        this.logger.debug(`Entered password: ${password}`);
+        this.logger.debug(`Stored hashed password: ${user.password}`);
+
+        const isPasswordMatching = await bcrypt.compare(password, user.password);
+        this.logger.debug(`isPasswordMatching: ${isPasswordMatching}`);
+
+        if (isPasswordMatching) {
+            user.failedLoginAttempts = 0; // Reset on successful login
+            await this.usersRepository.save(user);
+            this.logger.log(`User ${username} login successful`);
+            return user;
+        } else {
+            user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+            this.logger.warn(`Failed login attempt ${user.failedLoginAttempts} for user: ${username}`);
+        
+            if (user.failedLoginAttempts >= this.MAX_FAILED_ATTEMPTS) {
+                user.lockedUntil = new Date(Date.now() + this.LOCK_TIME); // Lock for 30 minutes
+                this.logger.warn(`Account locked until ${user.lockedUntil} due to too many failed login attempts`);
+            }
+        
+            await this.usersRepository.save(user);
+            await this.delayResponse();
+            return null;
+        }
     }
+    
+      private async delayResponse(): Promise<void> {
+        return new Promise((resolve) => setTimeout(resolve, 1000)); // 1-second delay
+      }
 
     async findByUsername(username: string): Promise<User> {
         try {

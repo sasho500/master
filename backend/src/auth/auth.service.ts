@@ -23,11 +23,9 @@ export class AuthService {
     }
     this.logger.log('User validation failed');
     return null;
-  }
+}
 
   async createUser(data): Promise<User> {
-    const salt = await bcrypt.genSalt();
-    data.password = await bcrypt.hash(data.password, salt);
     return this.usersService.create(data);
   }
 
