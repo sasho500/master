@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
 import { ThrottlerModule } from '@nestjs/throttler';
-
+import { RolesModule } from './roles/auth.module';
 @Module({
   imports: [
     AuthModule,
@@ -25,6 +25,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     }),
     ProductsModule,
     OrdersModule,
+    RolesModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,

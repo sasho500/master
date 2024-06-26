@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
@@ -19,7 +19,8 @@ export class AuthService {
     
     if (user) {
       this.logger.log('User validated successfully');
-      return jwt.sign({ key: user.key }, this.jwtSecret, { expiresIn: '1h' });
+      return jwt.sign({ key: user.key, role: user.role }, this.jwtSecret, { expiresIn: '1h' });
+
     }
     this.logger.log('User validation failed');
     return null;
@@ -39,8 +40,13 @@ export class AuthService {
     const token = await this.validateUser({ username: data.username, password: data.password });
     return { user, token };
   }
-
   decodeToken(token): any {
-    return jwt.verify(token, this.jwtSecret);
+    this.logger.debug('Decoding token:', token);
+    try {
+      return jwt.verify(token, this.jwtSecret);
+    } catch (err) {
+      this.logger.error('Invalid token:', err.message);
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }

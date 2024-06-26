@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
@@ -14,7 +14,7 @@ export class ProductsService {
         private usersService: UsersService
     ) {}
 
-    findAll(name?: string, gender?: 'F' | 'M'): Promise<Product[]> {
+    async findAll(name?: string, gender?: 'F' | 'M'): Promise<Product[]> {
         const where: any = {};
         if (name) {
             where.name = name;
@@ -23,34 +23,80 @@ export class ProductsService {
             where.gender = gender;
         }
 
-        return this.productsRepository.find({ where });
+        try {
+            const products = await this.productsRepository.find({ where });
+            this.logger.log(`Found ${products.length} products`);
+            return products;
+        } catch (error) {
+            this.logger.error('Failed to retrieve products', error.stack);
+            throw new Error('Error retrieving products');
+        }
     }
 
-    findOne(id: number): Promise<Product> {
-        return this.productsRepository.findOne({ where: { product_id: id } }); // Ensuring correct usage of findOne
+    async findOne(id: number): Promise<Product> {
+        try {
+            const product = await this.productsRepository.findOne({ where: { product_id: id } });
+            if (!product) {
+                throw new NotFoundException('Product not found');
+            }
+            this.logger.log(`Found product: ${JSON.stringify(product)}`);
+            return product;
+        } catch (error) {
+            this.logger.error('Failed to retrieve product', error.stack);
+            throw new Error('Error retrieving product');
+        }
     }
 
     async create(product: Product, userKey: string): Promise<Product> {
-        // const user = await this.usersService.findOne(userKey);
+        // Example check - you might add more specific logic here
+        const user = await this.usersService.findOne(userKey);
+        // this.logger.debug("test log", user);
         // if (!user || user.role !== 'admin') {
+        //     this.logger.error('Unauthorized attempt to create product');
         //     throw new Error('Unauthorized: Only admins can add products.');
         // }
-        return this.productsRepository.save(product);
-    }
 
+        try {
+            const newProduct = await this.productsRepository.save(product);
+            this.logger.log(`Created product: ${JSON.stringify(newProduct)}`);
+            return newProduct;
+        } catch (error) {
+            this.logger.error('Failed to create product', error.stack);
+            throw new Error('Error creating product');
+        }
+    }
 
     async update(id: number, productData: Partial<Product>): Promise<Product> {
         const product = await this.productsRepository.findOne({ where: { product_id: id } });
-        if (!product) throw new Error('Product not found');
+        if (!product) {
+            throw new NotFoundException('Product not found');
+        }
 
-        return this.productsRepository.save({
-            ...product,
-            ...productData
-        });
+        try {
+            const updatedProduct = await this.productsRepository.save({
+                ...product,
+                ...productData
+            });
+            this.logger.log(`Updated product: ${JSON.stringify(updatedProduct)}`);
+            return updatedProduct;
+        } catch (error) {
+            this.logger.error('Failed to update product', error.stack);
+            throw new Error('Error updating product');
+        }
     }
 
     async remove(id: number): Promise<void> {
-        await this.productsRepository.delete(id);
+        const product = await this.productsRepository.findOne({ where: { product_id: id } });
+        if (!product) {
+            throw new NotFoundException('Product not found');
+        }
+
+        try {
+            await this.productsRepository.delete(id);
+            this.logger.log(`Deleted product with id: ${id}`);
+        } catch (error) {
+            this.logger.error('Failed to delete product', error.stack);
+            throw new Error('Error deleting product');
+        }
     }
-    
 }
