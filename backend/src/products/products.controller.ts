@@ -16,15 +16,15 @@ export class ProductsController {
         return this.productsService.findOne(id);
     }
 
-    @Post()
-    create(@Body() product: Product, @Body('userKey') userKey: string): Promise<Product> {
-        return this.productsService.create(product, userKey);
-    }
+    // @Post()
+    // create(@Body() product: Product, @Body('userKey') userKey: string): Promise<Product> {
+    //     return this.productsService.create(product, userKey);
+    // }
 
-    @Post(':id')
-    update(@Param('id') id: number, @Body() productData: Partial<Product>): Promise<Product> {
-        return this.productsService.update(id, productData);
-    }
+    // @Post(':id')
+    // update(@Param('id') id: number, @Body() productData: Partial<Product>): Promise<Product> {
+    //     return this.productsService.update(id, productData);
+    // }
 
     @Delete(':id')
     remove(@Param('id') id: number): Promise<void> {
