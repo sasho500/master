@@ -1,0 +1,39 @@
+<div class="navbar">
+  <div class="search-container">
+    <div class="filter-bar">
+      <button (click)="filterByGender('M')">Male</button>
+      <button (click)="filterByGender('F')">Female</button>
+    </div>
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Search products..."
+      class="search-input"
+    />
+    <button (click)="onSearch()" class="search-button">
+      <img src="assets/search.png" alt="Search" />
+    </button>
+  </div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a *ngIf="!isAuthenticated()" href="/login">Login</a>
+    <a *ngIf="!isAuthenticated()" href="/register">Register</a>
+    <a *ngIf="isAuthenticated()" (click)="authService.logout()">Logout</a>
+  </div>
+</div>
+
+<div *ngIf="isLoading">Loading...</div>
+
+<div *ngIf="!isLoading" class="product-list">
+  <div *ngFor="let product of products" class="card">
+    <img [src]="product.image_url" alt="{{ product.name }}" />
+    <div class="card-content">
+      <h3 class="card-title">{{ product.name }}</h3>
+      <p class="card-description">{{ product.description }}</p>
+      <p class="card-price">{{ product.price | currency }}</p>
+      <p class="card-gender">
+        {{ product.gender === "F" ? "Female" : "Male" }}
+      </p>
+    </div>
+  </div>
+</div>
