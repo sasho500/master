@@ -49,7 +49,7 @@ async function bootstrap() {
 
   // CSRF protection
   // app.use(csurf());
-
+  app.enableCors();
   await app.listen(3000);
 }
 bootstrap();
