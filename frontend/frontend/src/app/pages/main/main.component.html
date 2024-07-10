@@ -3,6 +3,7 @@
     <div class="filter-bar">
       <button (click)="filterByGender('M')">Male</button>
       <button (click)="filterByGender('F')">Female</button>
+      <button (click)="filterByGender()">Clear</button>
     </div>
     <input
       type="text"
@@ -18,7 +19,13 @@
     <a href="/">Home</a>
     <a *ngIf="!isAuthenticated()" href="/login">Login</a>
     <a *ngIf="!isAuthenticated()" href="/register">Register</a>
-    <a *ngIf="isAuthenticated()" (click)="authService.logout()">Logout</a>
+    <button
+      *ngIf="isAuthenticated()"
+      (click)="authService.logout()"
+      class="link-button"
+    >
+      Logout
+    </button>
   </div>
 </div>
 

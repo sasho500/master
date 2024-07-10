@@ -44,7 +44,7 @@ export class MainComponent implements OnInit {
     this.loadProducts();
   }
 
-  filterByGender(gender: string) {
+  filterByGender(gender: string = '') {
     this.genderFilter = gender;
     this.loadProducts();
   }
