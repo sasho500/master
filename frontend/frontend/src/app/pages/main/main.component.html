@@ -19,6 +19,7 @@
     <a href="/">Home</a>
     <a *ngIf="!isAuthenticated()" href="/login">Login</a>
     <a *ngIf="!isAuthenticated()" href="/register">Register</a>
+    <a *ngIf="isAuthenticated()" href="/orders">Orders</a>
     <button
       *ngIf="isAuthenticated()"
       (click)="authService.logout()"
@@ -41,6 +42,13 @@
       <p class="card-gender">
         {{ product.gender === "F" ? "Female" : "Male" }}
       </p>
+      <button *ngIf="isAuthenticated()" (click)="addToCart(product)">
+        Add to Cart
+      </button>
     </div>
   </div>
+</div>
+<div>
+  <button (click)="createOrder()">Create Order</button>
+  <button (click)="viewOrders()">View Orders</button>
 </div>

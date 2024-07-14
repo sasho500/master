@@ -1,0 +1,17 @@
+<div *ngIf="isLoading">Loading...</div>
+
+<div *ngIf="!isLoading && orders.length === 0">No orders found.</div>
+
+<div *ngIf="!isLoading && orders.length > 0">
+  <div *ngFor="let order of orders" class="order-card">
+    <h3>Order #{{ order.order_id }}</h3>
+    <p>Date: {{ order.date }}</p>
+    <p>Total Amount: {{ order.total_amount }}</p>
+    <div *ngFor="let detail of order.orderDetails" class="order-detail">
+      <p>Product: {{ detail.product.name }}</p>
+      <p>Quantity: {{ detail.quantity }}</p>
+      <p>Subtotal: {{ detail.subtotal }}</p>
+      <img [src]="detail.product.image_url" alt="{{ detail.name }}" />
+    </div>
+  </div>
+</div>

@@ -21,6 +21,7 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
+
   logout(): void {
     if (this.isBrowser) {
       this.cookieService.delete('authToken', '/');
@@ -38,11 +39,13 @@ export class AuthService {
   isAuthenticated(): boolean {
     return this.isBrowser ? this.cookieService.check('authToken') : false;
   }
+
   setToken(token: string) {
     if (this.isBrowser) {
       this.cookieService.set('authToken', token, 20 / (24 * 60)); // 20 minutes
     }
   }
+
   getCurrentUser(): any {
     return { role: 'user' };
   }

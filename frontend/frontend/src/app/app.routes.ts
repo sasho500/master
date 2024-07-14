@@ -6,10 +6,12 @@ import { MainComponent } from './pages/main/main.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { OrdersComponent } from './pages/orders/orders.component';
 export const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'orders', component: OrdersComponent },
 ];
 @NgModule({
   imports: [
