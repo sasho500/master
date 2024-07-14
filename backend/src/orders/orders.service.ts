@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException  } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './order.entity';
@@ -6,6 +6,7 @@ import { OrderDetails } from './order-details.entity';
 import { CreateOrderDto } from './create-order.dto';
 import { Product } from '../products/product.entity';
 import { UpdateOrderDto } from './update-order.dto';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class OrdersService {
@@ -19,9 +20,14 @@ export class OrdersService {
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
   ) {}
-
-  async createOrder(createOrderDto: CreateOrderDto, authKey: string): Promise<Order> {
+  async createOrder(createOrderDto: CreateOrderDto, token: string): Promise<Order> {
     try {
+      const decoded = jwt.decode(token) as any;
+      if (!decoded || !decoded.key) {
+        throw new UnauthorizedException('Invalid token');
+      }
+
+      const authKey = decoded.key;
       const order = new Order();
       order.auth_key = authKey;
       order.total_amount = createOrderDto.total_amount;
@@ -103,10 +109,21 @@ export class OrdersService {
   }
 
 
-  async getOrdersByAuthKey(authKey: string): Promise<Order[]> {
-    return this.ordersRepository.find({
-      where: { auth_key: authKey },
-      relations: ['orderDetails', 'orderDetails.product'],
-    });
+  async getOrdersByAuthKey(token: string): Promise<Order[]> {
+    try {
+      const decoded = jwt.decode(token) as any;
+      if (!decoded || !decoded.key) {
+        throw new UnauthorizedException('Invalid token');
+      }
+
+      const authKey = decoded.key;
+      return this.ordersRepository.find({
+        where: { auth_key: authKey },
+        relations: ['orderDetails', 'orderDetails.product'],
+      });
+    } catch (error) {
+      this.logger.error('Error fetching orders by auth key', error.stack);
+      throw error;
+    }
   }
 }
