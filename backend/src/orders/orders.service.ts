@@ -21,52 +21,68 @@ export class OrdersService {
     private productsRepository: Repository<Product>,
   ) {}
   async createOrder(createOrderDto: CreateOrderDto, token: string): Promise<Order> {
+    const queryRunner = this.ordersRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
     try {
-      const decoded = jwt.decode(token) as any;
-      if (!decoded || !decoded.key) {
-        throw new UnauthorizedException('Invalid token');
-      }
+        const decoded = jwt.decode(token) as any;
+        if (!decoded || !decoded.key) {
+            throw new UnauthorizedException('Invalid token');
+        }
+        const authKey = decoded.key;
 
-      const authKey = decoded.key;
-      const order = new Order();
-      order.auth_key = authKey;
-      order.total_amount = createOrderDto.total_amount;
+        const order = new Order();
+        order.auth_key = authKey;
+        order.total_amount = createOrderDto.total_amount;
 
-      this.logger.log('Saving order...');
-      const savedOrder = await this.ordersRepository.save(order);
-      this.logger.log(`Order saved with ID: ${savedOrder.order_id}`);
+        this.logger.debug("Order Data", JSON.stringify(order));
+        this.logger.log('Saving order...');
 
-      for (const detail of createOrderDto.orderDetails) {
-        this.logger.log(`Checking product with ID: ${detail.product_id}`);
-        const product = await this.productsRepository.findOne({ where: { product_id: detail.product_id } });
-        if (!product) {
-          throw new Error(`Product with ID ${detail.product_id} not found`);
+        const savedOrder = await queryRunner.manager.save(order);
+        this.logger.log(`Order saved with ID: ${savedOrder.order_id}`);
+
+        for (const detail of createOrderDto.orderDetails) {
+            this.logger.log(`Checking product with ID: ${detail.product_id}`);
+            const product = await queryRunner.manager.findOne(Product, { where: { product_id: detail.product_id } });
+            if (!product) {
+                this.logger.error(`Product with ID ${detail.product_id} not found`);
+                throw new Error(`Product with ID ${detail.product_id} not found`);
+            }
+
+            if (product.quantity <= 0) {
+                this.logger.error(`Product with ID ${detail.product_id} is out of stock`);
+                throw new Error(`Product with ID ${detail.product_id} is out of stock`);
+            }
+
+            const orderDetail = new OrderDetails();
+            orderDetail.order = savedOrder;
+            orderDetail.product = product;
+            orderDetail.quantity = detail.quantity;
+            orderDetail.subtotal = detail.subtotal;
+
+            this.logger.log('Saving order detail...');
+            await queryRunner.manager.save(orderDetail);
+            this.logger.log('Order detail saved');
         }
 
-        if (product.quantity <= 0) {
-          throw new Error(`Product with ID ${detail.product_id} is out of stock`);
-        }
+        await queryRunner.commitTransaction();
 
-        const orderDetail = new OrderDetails();
-        orderDetail.order = savedOrder;
-        orderDetail.product = product;
-        orderDetail.quantity = detail.quantity;
-        orderDetail.subtotal = detail.subtotal;
-
-        this.logger.log('Saving order detail...');
-        await this.orderDetailsRepository.save(orderDetail);
-        this.logger.log('Order detail saved');
-      }
-
-      this.logger.log('Fetching saved order with details...');
-      const result = await this.ordersRepository.findOne({ where: { order_id: savedOrder.order_id }, relations: ['orderDetails', 'orderDetails.product'] });
-      this.logger.log('Order fetched successfully');
-      return result;
+        this.logger.log('Fetching saved order with details...');
+        const result = await this.ordersRepository.findOne({
+            where: { order_id: savedOrder.order_id },
+            relations: ['orderDetails', 'orderDetails.product'],
+        });
+        this.logger.log('Order fetched successfully');
+        return result;
     } catch (error) {
-      this.logger.error('Error creating order', error.stack);
-      throw error;
+        await queryRunner.rollbackTransaction();
+        this.logger.error('Error creating order', error.stack);
+        throw error;
+    } finally {
+        await queryRunner.release();
     }
-  }
+}
 
   async updateOrder(authKey: string, orderId: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
     try {
