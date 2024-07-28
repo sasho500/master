@@ -22,6 +22,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
 
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, userData);
+  }
+
   logout(): void {
     if (this.isBrowser) {
       this.cookieService.delete('authToken', '/');

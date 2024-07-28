@@ -49,6 +49,8 @@
   </div>
 </div>
 <div>
-  <button (click)="createOrder()">Create Order</button>
-  <button (click)="viewOrders()">View Orders</button>
+  <button *ngIf="isAuthenticated()" (click)="createOrder()">
+    Create Order
+  </button>
+  <button *ngIf="isAuthenticated()" (click)="viewOrders()">View Orders</button>
 </div>
