@@ -20,6 +20,9 @@
     <a *ngIf="!isAuthenticated()" href="/login">Login</a>
     <a *ngIf="!isAuthenticated()" href="/register">Register</a>
     <a *ngIf="isAuthenticated()" href="/orders">Orders</a>
+    <a *ngIf="isAuthenticated() && authService.isAdmin()" href="/admin"
+      >Admin Page</a
+    >
     <button
       *ngIf="isAuthenticated()"
       (click)="authService.logout()"

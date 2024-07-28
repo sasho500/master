@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
+import { jwtDecode } from 'jwt-decode';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -51,6 +53,23 @@ export class AuthService {
   }
 
   getCurrentUser(): any {
-    return { role: 'user' };
+    if (this.isBrowser) {
+      const token = this.cookieService.get('authToken');
+      if (token) {
+        try {
+          const decodedToken: any = jwtDecode(token);
+          return decodedToken;
+        } catch (error) {
+          console.error('Error decoding token', error);
+          return null;
+        }
+      }
+    }
+    return null;
+  }
+
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return user && user.role === 'admin';
   }
 }
