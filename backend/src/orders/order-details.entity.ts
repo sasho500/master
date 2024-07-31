@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from '../products/product.entity';
 
@@ -10,7 +16,8 @@ export class OrderDetails {
   @ManyToOne(() => Order, (order) => order.orderDetails)
   order: Order;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => Product, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'product_id' })
   product: Product;
 
   @Column('int')
