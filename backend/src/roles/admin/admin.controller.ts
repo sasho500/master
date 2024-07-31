@@ -1,4 +1,4 @@
-import { Controller, Post, Put, UseGuards, Body, Param  } from '@nestjs/common';
+import { Controller, Post, Put, Delete, UseGuards, Body, Param  } from '@nestjs/common';
 import { Roles } from '../roles.decorator';
 import { RolesGuard } from '../roles.guard';
 import { ProductsService } from '../../products/products.service';
@@ -22,5 +22,12 @@ export class AdminController {
   async updateProduct(@Param('id') id: number, @Body() productData: Partial<Product>) {
     const updatedProduct = await this.productsService.update(id, productData);
     return { message: 'Product updated successfully', product: updatedProduct };
+  }
+
+  @Delete('delete/:id')
+  @Roles('admin')
+  async removeProduct(@Param('id') id: number): Promise<any> {
+    await this.productsService.remove(id);
+    return { message: `Product with id ${id} deleted successfully` };
   }
 }
