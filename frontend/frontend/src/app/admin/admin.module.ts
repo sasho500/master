@@ -5,10 +5,16 @@ import { ProductManagementComponent } from './product-management/product-managem
 import { UserVisualizationComponent } from './user-visualization/user-visualization.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminGuard } from '../guards/admin.guard';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [ProductManagementComponent, UserVisualizationComponent],
-  imports: [CommonModule, AdminRoutingModule, AdminComponent],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    AdminComponent,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   providers: [AdminGuard],
 })
 export class AdminModule {}

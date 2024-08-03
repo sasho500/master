@@ -1,0 +1,190 @@
+$product-purple: #6f42c1;
+$product-purple-dark: #5936a0;
+$product-gray-light: #3c3a3c;
+$product-border: #ddd;
+$product-bg: #f9f9f9;
+$product-white: #fff;
+$product-red: #e3342f;
+$product-red-dark: #cc1f1a;
+$product-yellow: #ffc107;
+$product-yellow-dark: #e0a800;
+
+$modal-bg: rgba(0, 0, 0, 0.5);
+$modal-content-bg: black;
+$modal-header-bg: $product-purple;
+$modal-header-color: black;
+$modal-close-color: black;
+$modal-close-hover-color: darken(black, 10%);
+$modal-button-bg: $product-purple;
+$modal-button-hover-bg: $product-purple-dark;
+
+.product-management-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  background-color: $product-bg;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.add-product-button {
+  margin-bottom: 15px;
+  padding: 10px 20px;
+  background-color: $product-purple;
+  color: $product-white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: $product-purple-dark;
+  }
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 12px 15px;
+    border: 1px solid $product-border;
+    text-align: left;
+  }
+
+  th {
+    background-color: $product-purple;
+    color: $product-white;
+  }
+
+  tr:nth-child(even) {
+    background-color: $product-gray-light;
+  }
+
+  .edit-button,
+  .delete-button {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .edit-button {
+    background-color: $product-yellow;
+    color: $product-white;
+
+    &:hover {
+      background-color: $product-yellow-dark;
+    }
+  }
+
+  .delete-button {
+    background-color: $product-red;
+    color: $product-white;
+
+    &:hover {
+      background-color: $product-red-dark;
+    }
+  }
+
+  select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid $product-border;
+    background-color: $product-white;
+  }
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: $modal-bg;
+  justify-content: center;
+  align-items: center;
+
+  &.show {
+    display: flex;
+  }
+
+  .modal-content {
+    background-color: $modal-content-bg;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+  }
+
+  .modal-header {
+    background-color: $modal-header-bg;
+    color: $modal-header-color;
+    padding: 15px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+    }
+
+    .close-button {
+      font-size: 24px;
+      cursor: pointer;
+      color: $modal-close-color;
+
+      &:hover {
+        color: $modal-close-hover-color;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 20px;
+
+    .form-group {
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: $product-gray-light;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid $product-border;
+        box-sizing: border-box;
+      }
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: $modal-button-bg;
+      color: $product-white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+
+      &:hover {
+        background-color: $modal-button-hover-bg;
+      }
+    }
+  }
+}

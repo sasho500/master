@@ -60,14 +60,25 @@ export class ApiService {
   }
 
   addProduct(product: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/admin/upload`, product);
+    const headers = this.getAuthHeaders();
+    return this.http.post(`${this.baseUrl}/admin/upload`, product, { headers });
   }
 
   updateProduct(productId: number, product: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/admin/update/${productId}`, product);
+    const headers = this.getAuthHeaders();
+    return this.http.put(`${this.baseUrl}/admin/update/${productId}`, product, {
+      headers,
+    });
   }
 
   deleteProduct(productId: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/admin/delete/${productId}`);
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.baseUrl}/admin/delete/${productId}`, {
+      headers,
+    });
+  }
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.getAuthKeyFromCookie();
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 }
