@@ -1,0 +1,9 @@
+<div class="product-management">
+  <h2>Product Management</h2>
+  <button (click)="addProduct()">Add Product</button>
+  <div *ngFor="let product of products">
+    <h3>{{ product.name }}</h3>
+    <button (click)="editProduct(product)">Edit</button>
+    <button (click)="deleteProduct(product.product_id)">Delete</button>
+  </div>
+</div>

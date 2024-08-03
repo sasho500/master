@@ -54,4 +54,20 @@ export class ApiService {
     }
     return '';
   }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/admin/users`);
+  }
+
+  addProduct(product: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/admin/upload`, product);
+  }
+
+  updateProduct(productId: number, product: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/admin/update/${productId}`, product);
+  }
+
+  deleteProduct(productId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/admin/delete/${productId}`);
+  }
 }
