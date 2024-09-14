@@ -26,8 +26,8 @@ export class ProductsController {
     //     return this.productsService.update(id, productData);
     // }
 
-    @Delete(':id')
-    remove(@Param('id') id: number): Promise<void> {
-        return this.productsService.remove(id);
-    }
+    // @Delete(':id')
+    // remove(@Param('id') id: number): Promise<void> {
+    //     return this.productsService.remove(id);
+    // }
 }
