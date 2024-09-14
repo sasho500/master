@@ -34,8 +34,31 @@ export class OrdersComponent implements OnInit {
     const authKey = this.authService.getToken();
     this.apiService.getOrders().subscribe(
       (orders: any) => {
-        this.orders = orders;
-        console.log('orders123', orders);
+        this.orders = orders.map((order: any) => {
+          const mergedOrderDetails: any = {};
+
+          order.orderDetails.forEach((detail: any) => {
+            const productName = detail.product.name;
+            const detailSubtotal = parseFloat(detail.subtotal);
+            if (mergedOrderDetails[productName]) {
+              mergedOrderDetails[productName].quantity += detail.quantity;
+              mergedOrderDetails[productName].subtotal = parseFloat(
+                (
+                  mergedOrderDetails[productName].subtotal + detailSubtotal
+                ).toFixed(2)
+              );
+            } else {
+              mergedOrderDetails[productName] = { ...detail };
+              mergedOrderDetails[productName].subtotal = parseFloat(
+                detailSubtotal.toFixed(2)
+              );
+            }
+          });
+
+          order.orderDetails = Object.values(mergedOrderDetails);
+          return order;
+        });
+
         this.isLoading = false;
       },
       (error: any) => {
