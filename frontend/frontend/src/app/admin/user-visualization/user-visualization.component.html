@@ -1,7 +1,48 @@
-<div class="user-visualization">
-  <h2>User Visualization</h2>
-  <div *ngFor="let user of users">
-    <h3>{{ user.username }}</h3>
-    <p>{{ user.email }}</p>
+<div class="user-management-container">
+  <h2>User Management</h2>
+
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="edit-button" (click)="openEditModal(user)">
+            Edit
+          </button>
+          <button class="delete-button" (click)="deleteUser(user.key)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Edit User Modal -->
+  <div *ngIf="selectedUser" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h3>Edit User: {{ selectedUser.username }}</h3>
+
+      <label>Email</label>
+      <input [(ngModel)]="selectedUser.email" placeholder="Email" />
+
+      <label>Role</label>
+      <select [(ngModel)]="selectedUser.role">
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+      </select>
+
+      <button class="save-button" (click)="updateUser()">Save Changes</button>
+    </div>
   </div>
 </div>
