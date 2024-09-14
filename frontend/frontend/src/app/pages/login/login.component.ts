@@ -19,7 +19,26 @@ export class LoginComponent {
   errorMessage: string | null = null;
   constructor(private authService: AuthService, private router: Router) {}
 
+  // Check for dangerous input before submitting
+  isDangerousInput(input: string): boolean {
+    const dangerousPatterns =
+      /<script>|<\/script>|SELECT|INSERT|UPDATE|DELETE|DROP|--|;|=|\(|\)/gi;
+    return dangerousPatterns.test(input);
+  }
+
   onSubmit() {
+    if (
+      this.isDangerousInput(this.credentials.username) ||
+      this.isDangerousInput(this.credentials.password)
+    ) {
+      console.log('test danger');
+      this.errorMessage = 'Wrong username or password';
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 6000);
+      return;
+    }
+
     this.authService.login(this.credentials).subscribe(
       (response) => {
         this.authService.setToken(response.token);
