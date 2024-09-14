@@ -1,69 +1,71 @@
-body,
-html {
-  height: 100%;
-  margin: 0;
+$primary-color: #6f42c1; // primary purple
+$secondary-color: #ffffff;
+$error-color: #e3342f;
+$input-bg-color: #f9f9f9;
+$input-border-color: #ddd;
+$button-bg-color: #6f42c1;
+$button-bg-hover: darken($button-bg-color, 10%);
+$form-bg-color: rgba(0, 0, 0, 0.8);
+
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url("../../../assets/logo.png");
+  min-height: 100vh;
+  background: url("../../../assets/logo.png") no-repeat center center fixed;
   background-size: cover;
 }
 
-.login-container {
+.login-form {
+  background-color: $form-bg-color;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-color: 8px green;
+  width: 100%;
+}
 
-  .form-group {
-    margin-bottom: 15px;
+.form-group {
+  margin-bottom: 20px;
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      color: white;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border-radius: 5px;
-    }
+  label {
+    color: $secondary-color;
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
   }
 
-  button {
+  input {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
-    color: black;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
-
-  .error-message {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f8d7da;
-    color: #fa1b31;
-    border: 1px solid #f5c6cb;
-    border-radius: 4px;
-    animation: fadeOut 200s forwards;
+    background-color: $input-bg-color;
+    border: 1px solid $input-border-color;
+    border-radius: 5px;
+    font-size: 14px;
   }
 }
 
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: $button-bg-color;
+  color: $secondary-color;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+
+  &:hover {
+    background-color: $button-bg-hover;
   }
-  100% {
-    opacity: 0;
-    display: none;
-  }
+}
+
+.error-message {
+  color: $error-color;
+  margin-top: 15px;
+  font-size: 12px;
+  background-color: rgba(255, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
 }
