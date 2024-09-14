@@ -48,7 +48,12 @@ export class AuthService {
 
   setToken(token: string) {
     if (this.isBrowser) {
-      this.cookieService.set('authToken', token, 20 / (24 * 60)); // 20 minutes
+      this.cookieService.set('authToken', token, {
+        expires: 50 / (24 * 60), // 50 minutes
+        secure: true, // Secure flag for HTTPS
+        sameSite: 'Strict', // Prevent CSRF attacks
+        path: '/', // Root path
+      });
     }
   }
 
