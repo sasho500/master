@@ -17,21 +17,103 @@ export class ProductManagementComponent implements OnInit {
 
   constructor(private apiService: ApiService, private fb: FormBuilder) {
     this.productForm = this.fb.group({
-      name: ['', Validators.required],
-      gender: ['', Validators.required],
-      image_url: ['', Validators.required],
-      description: ['', Validators.required],
-      price: ['', Validators.required],
-      quantity: ['', Validators.required],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+          Validators.pattern(/^[a-zA-Z0-9\s]+$/), // Alphanumeric only
+        ],
+      ],
+      gender: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[MF]$/), // 'M' or 'F' only
+        ],
+      ],
+      image_url: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/(https?:\/\/.*\.(?:png|jpg))/i), // URL ending with .png or .jpg
+        ],
+      ],
+      description: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(500),
+          Validators.pattern(/^[a-zA-Z0-9\s.,!]+$/), // Alphanumeric and basic punctuation
+        ],
+      ],
+      price: [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(100000),
+          Validators.pattern(/^\d+(\.\d{1,2})?$/), // Numbers with up to 2 decimal places
+        ],
+      ],
+      quantity: [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(1000),
+          Validators.pattern(/^\d+$/), // Whole numbers only
+        ],
+      ],
     });
 
     this.editForm = this.fb.group({
-      name: ['', Validators.required],
-      gender: ['', Validators.required],
-      description: ['', Validators.required],
-      image_url: ['', Validators.required],
-      price: ['', Validators.required],
-      quantity: ['', Validators.required],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+          Validators.pattern(/^[a-zA-Z0-9\s]+$/),
+        ],
+      ],
+      gender: ['', [Validators.required, Validators.pattern(/^[MF]$/)]],
+      description: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(500),
+          Validators.pattern(/^[a-zA-Z0-9\s.,!]+$/),
+        ],
+      ],
+      image_url: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/(https?:\/\/.*\.(?:png|jpg))/i),
+        ],
+      ],
+      price: [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(100000),
+          Validators.pattern(/^\d+(\.\d{1,2})?$/),
+        ],
+      ],
+      quantity: [
+        '',
+        [
+          Validators.required,
+          Validators.min(1),
+          Validators.max(1000),
+          Validators.pattern(/^\d+$/),
+        ],
+      ],
     });
   }
 
