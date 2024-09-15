@@ -44,9 +44,15 @@ export class MainComponent implements OnInit {
   }
 
   onSearch() {
+    const sanitizedQuery = this.sanitizeInput(this.searchQuery);
+    this.apiService.getProducts(sanitizedQuery).subscribe();
     this.loadProducts();
   }
 
+  sanitizeInput(input: string): string {
+    const safeInput = input.replace(/[^a-zA-Z0-9\s]/g, '');
+    return safeInput.trim();
+  }
   filterByGender(gender: string = '') {
     this.genderFilter = gender;
     this.loadProducts();

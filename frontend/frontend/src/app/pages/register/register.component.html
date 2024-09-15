@@ -1,39 +1,89 @@
 <div class="login-container">
-  <form (ngSubmit)="register()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input
-        type="text"
-        id="username"
-        [(ngModel)]="userData.username"
-        name="username"
-        required
-      />
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        [(ngModel)]="userData.password"
-        name="password"
-        required
-      />
-    </div>
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        [(ngModel)]="userData.email"
-        name="email"
-        required
-      />
-    </div>
+  <div class="register-form">
+    <form (ngSubmit)="register(registerForm)" #registerForm="ngForm">
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="userData.username"
+          name="username"
+          required
+          minlength="4"
+          maxlength="20"
+          pattern="^[a-zA-Z0-9]+$"
+          #username="ngModel"
+        />
+        <div *ngIf="username.invalid && username.touched" class="error-message">
+          <span *ngIf="username.errors?.['required']"
+            >Username is required.</span
+          >
+          <span *ngIf="username.errors?.['minlength']"
+            >Username must be at least 4 characters.</span
+          >
+          <span *ngIf="username.errors?.['maxlength']"
+            >Username cannot be longer than 20 characters.</span
+          >
+          <span *ngIf="username.errors?.['pattern']"
+            >Username can only contain letters and numbers.</span
+          >
+        </div>
+      </div>
 
-    <button type="submit">Register</button>
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
-  </form>
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="userData.password"
+          name="password"
+          required
+          minlength="8"
+          maxlength="20"
+          pattern="^[a-zA-Z0-9!@#$%^&*]+$"
+          #password="ngModel"
+        />
+        <div *ngIf="password.invalid && password.touched" class="error-message">
+          <span *ngIf="password.errors?.['required']"
+            >Password is required.</span
+          >
+          <span *ngIf="password.errors?.['minlength']"
+            >Password must be at least 8 characters.</span
+          >
+          <span *ngIf="password.errors?.['maxlength']"
+            >Password cannot be longer than 20 characters.</span
+          >
+          <span *ngIf="password.errors?.['pattern']"
+            >Password contains invalid characters.</span
+          >
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="userData.email"
+          name="email"
+          required
+          email
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+          #email="ngModel"
+        />
+        <div *ngIf="email.invalid && email.touched" class="error-message">
+          <span *ngIf="email.errors?.['required']">Email is required.</span>
+          <span *ngIf="email.errors?.['pattern']">Invalid email format.</span>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid">Register</button>
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </form>
+  </div>
 </div>

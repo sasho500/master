@@ -23,8 +23,12 @@ export class RegisterComponent {
   errorMessage: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
+  register(registerForm: any) {
+    if (registerForm.invalid) {
+      this.errorMessage = 'Please correct the errors in the form.';
+      return;
+    }
 
-  register() {
     this.authService.register(this.userData).subscribe(
       (response: any) => {
         this.authService
