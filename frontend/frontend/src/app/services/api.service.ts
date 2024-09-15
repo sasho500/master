@@ -56,7 +56,21 @@ export class ApiService {
   }
 
   getUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/admin/users`);
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getAuthKeyFromCookie()}`
+    );
+    return this.http.get<any[]>(`${this.baseUrl}/admin/users`, { headers });
+  }
+
+  updateUser(key: string, userData: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.put(`${this.baseUrl}/users/${key}`, userData, { headers });
+  }
+
+  deleteUser(key: string): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete(`${this.baseUrl}/users/${key}`, { headers });
   }
 
   addProduct(product: any): Observable<any> {

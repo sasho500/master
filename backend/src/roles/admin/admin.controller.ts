@@ -1,13 +1,21 @@
-import { Controller, Post, Put, Delete, UseGuards, Body, Param  } from '@nestjs/common';
+import { Controller,Get, Post, Put, Delete, UseGuards, Body, Param  } from '@nestjs/common';
 import { Roles } from '../roles.decorator';
 import { RolesGuard } from '../roles.guard';
 import { ProductsService } from '../../products/products.service';
 import { Product } from '../../products/product.entity';
+import { UsersService } from '../../users/users.service'; 
+import { User } from '../../users/user.entity';
 
 @Controller('admin')
 @UseGuards(RolesGuard)
 export class AdminController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService , private readonly usersService: UsersService, ) {}
+
+  @Get('users')
+  @Roles('admin')  // Ensure only admins can access this
+  async getAllUsers(): Promise<User[]> {
+    return this.usersService.findAll();
+  }
 
   @Post('upload')
   @Roles('admin')

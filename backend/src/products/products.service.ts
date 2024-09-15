@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {Like,  Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { UsersService } from '../users/users.service';
 
@@ -17,8 +17,8 @@ export class ProductsService {
     async findAll(name?: string, gender?: 'F' | 'M'): Promise<Product[]> {
         const where: any = {};
         if (name) {
-            where.name = name;
-        }
+            where.name = Like(`%${name.replace(/[^a-zA-Z0-9\s]/g, '')}%`);
+          }
         if (gender) {
             where.gender = gender;
         }
