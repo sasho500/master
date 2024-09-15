@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-user-visualization',
@@ -8,11 +9,27 @@ import { ApiService } from '../../services/api.service';
 })
 export class UserVisualizationComponent implements OnInit {
   users: any[] = [];
+  userForm: FormGroup;
   selectedUser: any = null;
-  constructor(private apiService: ApiService) {}
+
+  constructor(private apiService: ApiService, private fb: FormBuilder) {
+    // Define the form structure
+    this.userForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      role: ['', [Validators.required]],
+      password: [
+        '',
+        [
+          Validators.minLength(8),
+          Validators.maxLength(20),
+          Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/),
+        ],
+      ],
+    });
+  }
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.loadUsers(); // Load users when component initializes
   }
 
   loadUsers(): void {
@@ -21,29 +38,43 @@ export class UserVisualizationComponent implements OnInit {
     });
   }
 
+  // Open the edit modal and populate the form
   openEditModal(user: any): void {
-    this.selectedUser = { ...user }; // Copy the user object for editing
+    this.selectedUser = { ...user }; // Clone the user object for editing
+    this.userForm.patchValue({
+      email: this.selectedUser.email,
+      role: this.selectedUser.role,
+      password: '', // Do not pre-fill the password for security reasons
+    });
   }
 
+  // Close the modal
   closeModal(): void {
-    this.selectedUser = null; // Close the modal by clearing selectedUser
+    this.selectedUser = null;
+    this.userForm.reset(); // Reset form when modal is closed
   }
 
+  // Update user data
   updateUser(): void {
-    if (this.selectedUser) {
+    if (this.userForm.valid) {
+      const updatedUser = {
+        ...this.selectedUser, // Spread the current user data
+        ...this.userForm.value, // Overwrite with form data
+      };
       this.apiService
-        .updateUser(this.selectedUser.key, this.selectedUser)
+        .updateUser(this.selectedUser.key, updatedUser)
         .subscribe(() => {
-          this.loadUsers();
+          this.loadUsers(); // Reload users after update
           this.closeModal(); // Close modal after updating
         });
     }
   }
 
+  // Delete user
   deleteUser(userKey: string): void {
     if (confirm('Are you sure you want to delete this user?')) {
       this.apiService.deleteUser(userKey).subscribe(() => {
-        this.loadUsers();
+        this.loadUsers(); // Reload users after deletion
       });
     }
   }
