@@ -1,13 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) platformId: any) {
+    if (isPlatformBrowser(platformId)) {
+      this.baseUrl = `${environment.apiUrl}`; // Client-side
+    } else {
+      this.baseUrl = `${process.env['API_URL']}`; // Server-side
+    }
+  }
   getProducts(name: string = '', gender: string = ''): Observable<any[]> {
     let url = `${this.baseUrl}/products`;
     const params: string[] = [];

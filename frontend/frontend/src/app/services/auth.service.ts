@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
 import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/auth';
+  private apiUrl: string;
   private isBrowser: boolean;
 
   constructor(
@@ -18,6 +19,12 @@ export class AuthService {
     private cookieService: CookieService
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+
+    if (isPlatformBrowser(platformId)) {
+      this.apiUrl = `${environment.apiUrl}/auth`; // Client-side
+    } else {
+      this.apiUrl = `${process.env['API_URL']}/auth`; // Server-side
+    }
   }
 
   login(credentials: any): Observable<any> {

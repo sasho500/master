@@ -16,8 +16,9 @@ export class OrdersComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private apiService: ApiService,
+
     private router: Router
   ) {}
 
@@ -66,5 +67,12 @@ export class OrdersComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  isAuthenticated(): boolean {
+    if (typeof window !== 'undefined') {
+      return this.authService.isAuthenticated();
+    }
+    return false;
   }
 }

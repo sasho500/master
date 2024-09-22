@@ -1,3 +1,19 @@
+<div class="navbar">
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a *ngIf="isAuthenticated() && authService.isAdmin()" href="/admin"
+      >Admin Page</a
+    >
+    <button
+      *ngIf="isAuthenticated()"
+      (click)="authService.logout()"
+      class="link-button"
+    >
+      Logout
+    </button>
+  </div>
+</div>
+
 <div *ngIf="isLoading">Loading...</div>
 
 <div *ngIf="!isLoading && orders.length === 0">No orders found.</div>
