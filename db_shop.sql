@@ -2,7 +2,7 @@
 -- PostgreSQL database cluster dump
 --
 
--- Started on 2024-09-16 01:21:44
+-- Started on 2024-09-23 12:53:11
 
 SET default_transaction_read_only = off;
 
@@ -44,7 +44,7 @@ ALTER ROLE postgres WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION
 -- Dumped from database version 16.3
 -- Dumped by pg_dump version 16.3
 
--- Started on 2024-09-16 01:21:44
+-- Started on 2024-09-23 12:53:11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -57,7 +57,7 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
--- Completed on 2024-09-16 01:21:46
+-- Completed on 2024-09-23 12:53:11
 
 --
 -- PostgreSQL database dump complete
@@ -74,7 +74,7 @@ SET row_security = off;
 -- Dumped from database version 16.3
 -- Dumped by pg_dump version 16.3
 
--- Started on 2024-09-16 01:21:46
+-- Started on 2024-09-23 12:53:11
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -835,10 +835,18 @@ COPY public.orderdetails (order_detail_id, quantity, subtotal, "orderOrderId", p
 169	1	10.00	100	12
 170	1	15.23	100	36
 171	1	15.00	101	2
+172	1	10.00	102	13
 71	1	15.00	49	2
 72	1	10.00	50	23
 73	1	15.00	51	2
 74	1	10.00	51	23
+173	1	10.00	102	14
+174	1	150.00	103	31
+175	1	150.00	103	31
+176	1	10.00	103	12
+177	1	10.00	104	14
+178	1	10.00	104	14
+179	1	15.23	104	36
 87	1	10.00	60	23
 88	1	15.00	61	2
 89	1	10.00	61	23
@@ -951,6 +959,9 @@ COPY public.orders (order_id, auth_key, date, total_amount) FROM stdin;
 99	16137614-044b-4942-8990-3f5dd0c9ca4c	2024-09-16	15.23
 100	16137614-044b-4942-8990-3f5dd0c9ca4c	2024-09-16	35.23
 101	16137614-044b-4942-8990-3f5dd0c9ca4c	2024-09-16	15.00
+102	2f56bfe8-a2ee-4340-99f6-053dda4a04bc	2024-09-22	20.00
+103	2f56bfe8-a2ee-4340-99f6-053dda4a04bc	2024-09-22	310.00
+104	95714768-b702-473d-a4c0-e4c764b3fabe	2024-09-22	35.23
 \.
 
 
@@ -987,10 +998,10 @@ COPY public.products (product_id, name, description, price, quantity, image_url,
 25	Test	First product 	10.00	100	https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuXt8OFO6sZJL0XCqvdexUikWPDoGLiHuuuQ&s	F
 9	Test Product	A product for testing	10.00	100	test	F
 10	test update12	A product for testing	13233.00	100	haha	M
-31	Top g	test edit	150.00	23	https://i.ebayimg.com/images/g/KTEAAOSwChNkODv0/s-l1600.png	M
 34	test update1234	A product for testing	101.00	1010	test222	M
-12	Test Product	A product for testing	10.00	100	https://hips.hearstapps.com/hmg-prod/images/look-1-victoria-f-6683d04283308.jpg?crop=1xw:1xh;center,top&resize=980:*	M
 36	Gucci shit1	test new validations 	15.23	23	https://i.pinimg.com/564x/92/af/39/92af397ac2de2bf71ae3dc3836d8e3e7.jpg	M
+12	Test Product test	A product for testing	10.00	100	https://hips.hearstapps.com/hmg-prod/images/look-1-victoria-f-6683d04283308.jpg?crop=1xw:1xh;center,top&resize=980:*	M
+31	Top g	test edit final test	69.00	25	https://i.ebayimg.com/images/g/KTEAAOSwChNkODv0/s-l1600.png	M
 \.
 
 
@@ -1011,7 +1022,6 @@ COPY public."user" (username, email, password, role, key) FROM stdin;
 --
 
 COPY public.users (username, password, email, role, profile_picture_url, key, user_id, "failedLoginAttempts", "lockedUntil") FROM stdin;
-sasho_test_login2	$2b$10$.noueanaC/J3vJ4.Sg5vR.Uc6JaUy66cRBfwu4F.Kj2x4XxX6opbC	new_user@example.com	user	http://example.com/new_profile_picture.jpg	adb64adc-04a5-45f9-938e-1c159a7cd143	13	0	\N
 sasho_test_login2	$2b$10$uHtp5mxSgdAwtBvbpNJNmuEcRxTlqCE0/bZZM8A0mMENiAQVB5ta.	new_user@example.com	user	http://example.com/new_profile_picture.jpg	ac8d0a5d-4583-457f-bb88-699e6bf0d8ac	14	0	\N
 sasho_test_login2	$2b$10$MZFvaF9ox70rSPPrm1lZTOz3W4pDqejEdbnxa0P9c8Lp6ZZPhynCq	new_user@example.com	user	http://example.com/new_profile_picture.jpg	f0a35a47-1295-4f26-99ea-d03bfc4010e8	15	0	\N
 sasho_test_login3	$2b$10$yuDDPdZt2xsJXEIhaBx0GOg6YHl3layimhvNIWR1eybuzZ/JVzXH.	new_user@example.com	user	http://example.com/new_profile_picture.jpg	d2f70cdd-fac2-495d-a913-b104438a6fc9	16	0	\N
@@ -1041,6 +1051,7 @@ sasho_test_login2		12321312313new_user@example.com	user	http://example.com/new_p
 sasho_test_login2	$2b$12$EtypZKPCWnGbNlHW7ZpRKurqTn6Q2cZb4r.UhKTsNgVaePmLQsm9S	test@example.com	user	http://example.com/new_profile_picture.jpg	7e05a5af-64e5-4a31-8c49-bfb3ea79738a	12	0	\N
 sasho_test_login2		test@tes1111111111111111111111111111111111t.com	user	http://example.com/new_profile_picture.jpg	11c92612-1da7-484e-acc8-5b3d6e8d9723	10	0	\N
 sasho_test_login2		new_user@example.com999999999999999999999999999999999	user	http://example.com/new_profile_picture.jpg	e3fb8850-64ad-4f81-b789-4880a63b4305	11	0	\N
+sasho_test_login2		new_user123@example.com	user	http://example.com/new_profile_picture.jpg	adb64adc-04a5-45f9-938e-1c159a7cd143	13	0	\N
 test_last23	$2b$10$OEsqk1zOlTVNwTVZ27Dvyu6XKdWQAoV2s9.LU2MrfkvODoo2gr9gO	new_user@example.com	user	http://example.com/new_profile_picture.jpg	73435a0e-6d57-49e0-97da-21626b06995a	38	0	\N
 test_last233	$2b$10$rkkgq8GdAoOC90HRJmheC.GszL1X4tQKMPI6e2BKsWtWioEJyY2NC	new_user@example.com	user	http://example.com/new_profile_picture.jpg	74efce1b-e386-4c80-9fd7-bc37f61a1446	39	0	\N
 test_last233	$2b$10$nhj1YuvxaMsU9DtYilF98uhe3NMkGylOZEROD4U1wnEK9HRSjTSD2	new_user@example.com	user	http://example.com/new_profile_picture.jpg	3594dc67-e453-4752-a26d-29b9f257d95f	40	0	\N
@@ -1091,15 +1102,17 @@ test_user1223334	$2b$12$m4Vjsg5eEZCvpmXefcG6/ugblFR8Vb407Em1hj8mhJTIAJhkdhtju	ne
 test_user12233344	$2b$12$S5bdQj4y3w3PWQBHmsHzCOsT.9NrWdk.igj5QZipLb3W0REuRZgga	new_user@example.com	user	http://example.com/new_profile_picture.jpg	64ee245d-b72f-43ab-a585-4c7bbf96abef	80	1	\N
 test_user1223334455	$2b$12$/duAZSk1BheCexA4YjiNSO5zlC8YsrffN7jMgX3jYWBo9jtulFNZe	new_user@example.com	user	http://example.com/new_profile_picture.jpg	bdd772f3-2a04-4c05-8df8-4dc48048c19a	81	1	\N
 test_backend2	$2b$12$nlR5Z0GjnQ4Xb3xWVKKi9OK3JspS.2WiRRNjSPCR9kooug0LRQzF6	new_user@example.com	user	http://example.com/new_profile_picture.jpg	0f59c523-0037-420a-9c99-0d262344316c	87	1	\N
+test_test_last	$2b$12$dyMW8R8Yw1e08RIH2JxRreCqNxxnx6bFQg1b9tFtPQvG749suf7Je	Alex.palikov@abv.bg	user	http://example.com/new_profile_picture.jpg	ae86cb77-21c8-4379-85e9-1df0ba670f03	94	0	\N
 Sasho500	$2b$12$ePx.72GppywPkFlhWvpPMey8SrhDPsofF1WURbuBH2swUQyxbKZ0a	sasho.palikov@gmail.com	user	http://example.com/new_profile_picture.jpg	d805bcfa-4a79-459a-8ac3-bf5711ebea93	91	3	\N
 test1231	$2b$12$tv9dc14NUsvcERI7QPyjUOEixnMzRM8.HbgBD9XaVfzo654koE8TO	sasho.palikov@gmail.com	user	http://example.com/new_profile_picture.jpg	82a84b1d-296e-4068-a6e3-140a807ed222	90	0	\N
 fear50	$2b$12$0dQZ3vXes.KKMi1nyvRe0.j0okl4wJOy40Ne7vkTc013V3ZdMPZxO	sasho.palikov@abv.bg	user	http://example.com/new_profile_picture.jpg	68ce464b-bee3-4bda-a27f-4d7227eaf84e	95	0	\N
 Sasho5001	$2b$12$rSVSh.YJhSiNkkYaTeKQNub8u9HiakotznBIQkVTFgBC5GkdjAVMu	sasho.palikov@gmail.com	user	http://example.com/new_profile_picture.jpg	27dc36a3-9154-43c4-a408-fbfa404b860b	92	0	\N
+test test12	$2b$12$hGrKgqXZzQZiiUybBi.zCembUux8A7odPja/iMOm/yYx69/SK.J1q	ollie45@jaccessedsq.com	user	http://example.com/new_profile_picture.jpg	6fa77e32-0009-4f4a-973a-d8fd4f132a00	98	0	\N
 sasho1	$2b$12$MUKeQbJhI9b9NaQYGXUVde0TQBvahGVUnFMQ7HLWBYVuGL6N/DZ9q	test@gmail.com	user	http://example.com/new_profile_picture.jpg	3611cb20-194c-42e0-8560-b839d1832b6e	96	0	\N
 test_role	$2b$12$NGUN6b8GxHh4.swBLPv1ouRiGorLDewbHk.nj9uxcwH4uP37d3mZe	new_user@example.com	user	http://example.com/new_profile_picture.jpg	0bb06ce1-2cb9-481c-ae4f-761f29ab4dc8	93	0	\N
 test_user122333445555555	$2b$12$85sHBFPH.z/iGXPG52sr7uAxN2bfi2sMSFHUZDrQM6lwmvqa5yPfC	new_user@example.com111	user	http://example.com/new_profile_picture.jpg	09a148d8-9147-49fc-b40a-20371b311bbe	82	1	\N
-test_test_last	$2b$12$0wo6X/Uht035RU3w7sLuN.x//q2bDpIp02ime0BXnYzanMFprDQBG	sasho.palikov@abv.bg	user	http://example.com/new_profile_picture.jpg	ae86cb77-21c8-4379-85e9-1df0ba670f03	94	0	\N
 test order	$2b$12$/VTOKelVLOFHwasadXZ1ZuNI8npOKNM226MjOzsCLCgGuibDnUiNS	ollie45@jaccessedsq.com	user	http://example.com/new_profile_picture.jpg	16137614-044b-4942-8990-3f5dd0c9ca4c	97	0	\N
+test final 	$2b$12$NqzEwGaYeiJ7ljxGeXwEheroKagie/uP/6xg6BVp6tJ22jZISiHuq	ollie45@jaccessedsq.com	user	http://example.com/new_profile_picture.jpg	95714768-b702-473d-a4c0-e4c764b3fabe	99	0	\N
 \.
 
 
@@ -1145,7 +1158,7 @@ SELECT pg_catalog.setval('public.order_id_seq', 1, true);
 -- Name: orderdetails_order_detail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.orderdetails_order_detail_id_seq', 171, true);
+SELECT pg_catalog.setval('public.orderdetails_order_detail_id_seq', 179, true);
 
 
 --
@@ -1154,7 +1167,7 @@ SELECT pg_catalog.setval('public.orderdetails_order_detail_id_seq', 171, true);
 -- Name: orders_order_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.orders_order_id_seq', 101, true);
+SELECT pg_catalog.setval('public.orders_order_id_seq', 104, true);
 
 
 --
@@ -1172,7 +1185,7 @@ SELECT pg_catalog.setval('public.product_product_id_seq', 1, true);
 -- Name: products_product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.products_product_id_seq', 36, true);
+SELECT pg_catalog.setval('public.products_product_id_seq', 37, true);
 
 
 --
@@ -1181,7 +1194,7 @@ SELECT pg_catalog.setval('public.products_product_id_seq', 36, true);
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 97, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 99, true);
 
 
 --
@@ -1372,7 +1385,7 @@ ALTER TABLE ONLY public."order"
     ADD CONSTRAINT "FK_f2118217784d0e73e2b050bd564" FOREIGN KEY ("userUserId") REFERENCES public.users(user_id);
 
 
--- Completed on 2024-09-16 01:21:47
+-- Completed on 2024-09-23 12:53:12
 
 --
 -- PostgreSQL database dump complete
@@ -1391,7 +1404,7 @@ ALTER TABLE ONLY public."order"
 -- Dumped from database version 16.3
 -- Dumped by pg_dump version 16.3
 
--- Started on 2024-09-16 01:21:47
+-- Started on 2024-09-23 12:53:12
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1761,13 +1774,13 @@ ALTER TABLE ONLY public.orders
     ADD CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
 
 
--- Completed on 2024-09-16 01:21:48
+-- Completed on 2024-09-23 12:53:12
 
 --
 -- PostgreSQL database dump complete
 --
 
--- Completed on 2024-09-16 01:21:48
+-- Completed on 2024-09-23 12:53:12
 
 --
 -- PostgreSQL database cluster dump complete
