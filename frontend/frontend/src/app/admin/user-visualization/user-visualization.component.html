@@ -1,0 +1,79 @@
+<div class="user-management-container">
+  <h2>User Management</h2>
+
+  <table class="user-table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="edit-button" (click)="openEditModal(user)">
+            Edit
+          </button>
+          <button class="delete-button" (click)="deleteUser(user.key)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Edit User Modal -->
+  <div *ngIf="selectedUser" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h3>Edit User: {{ selectedUser.username }}</h3>
+
+      <form [formGroup]="userForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" formControlName="email" type="email" />
+          <div
+            *ngIf="
+              userForm.get('email')?.invalid && userForm.get('email')?.touched
+            "
+            class="error-message"
+          >
+            Please enter a valid email address.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select formControlName="role">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" formControlName="password" type="password" />
+          <div
+            *ngIf="
+              userForm.get('password')?.invalid &&
+              userForm.get('password')?.touched
+            "
+            class="error-message"
+          >
+            Password must be between 8 and 20 characters, with at least one
+            letter and one number.
+          </div>
+        </div>
+
+        <button class="save-button" type="submit" (click)="updateUser()">
+          Save Changes
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

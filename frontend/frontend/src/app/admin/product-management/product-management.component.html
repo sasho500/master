@@ -1,0 +1,236 @@
+<div class="product-management">
+  <h2>Product Management</h2>
+  <button class="add-button" (click)="toggleAddModal()">Add Product</button>
+
+  <table class="product-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Description</th>
+        <th>Image URL</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.name }}</td>
+        <td>{{ product.gender === "F" ? "Female" : "Male" }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.image_url }}</td>
+        <td>{{ product.price | currency }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>
+          <button class="edit-button" (click)="toggleEditModal(product)">
+            Edit
+          </button>
+          <button
+            class="delete-button"
+            (click)="deleteProduct(product.product_id)"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!-- Add Product Modal -->
+<div class="modal" [class.show]="showAddModal">
+  <div class="modal-content">
+    <span class="close-button" (click)="toggleAddModal()">&times;</span>
+    <h2>Add Product</h2>
+    <form [formGroup]="productForm" (ngSubmit)="addProduct()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" formControlName="name" type="text" />
+        <div
+          *ngIf="
+            productForm.get('name')?.invalid && productForm.get('name')?.touched
+          "
+          class="error-message"
+        >
+          Name must be between 3 and 100 characters and contain only
+          alphanumeric characters.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" formControlName="gender">
+          <option value="F">Female</option>
+          <option value="M">Male</option>
+        </select>
+        <div
+          *ngIf="
+            productForm.get('gender')?.invalid &&
+            productForm.get('gender')?.touched
+          "
+          class="error-message"
+        >
+          Please select a valid gender.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="image_url">Image URL</label>
+        <input id="image_url" formControlName="image_url" type="text" />
+        <div
+          *ngIf="
+            productForm.get('image_url')?.invalid &&
+            productForm.get('image_url')?.touched
+          "
+          class="error-message"
+        >
+          Please enter a valid image URL (must end with .jpg or .png).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input id="description" formControlName="description" type="text" />
+        <div
+          *ngIf="
+            productForm.get('description')?.invalid &&
+            productForm.get('description')?.touched
+          "
+          class="error-message"
+        >
+          Description must be between 10 and 500 characters and can contain only
+          basic punctuation.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input id="price" formControlName="price" type="number" />
+        <div
+          *ngIf="
+            productForm.get('price')?.invalid &&
+            productForm.get('price')?.touched
+          "
+          class="error-message"
+        >
+          Price must be a valid number between 1 and 100,000.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input id="quantity" formControlName="quantity" type="number" />
+        <div
+          *ngIf="
+            productForm.get('quantity')?.invalid &&
+            productForm.get('quantity')?.touched
+          "
+          class="error-message"
+        >
+          Quantity must be a valid whole number between 1 and 1000.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="productForm.invalid">
+        Add Product
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div class="modal" [class.show]="showEditModal">
+  <div class="modal-content">
+    <span class="close-button" (click)="toggleEditModal()">&times;</span>
+    <h2>Edit Product</h2>
+    <form [formGroup]="editForm" (ngSubmit)="editProduct()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" formControlName="name" type="text" />
+        <div
+          *ngIf="editForm.get('name')?.invalid && editForm.get('name')?.touched"
+          class="error-message"
+        >
+          Name must be between 3 and 100 characters and contain only
+          alphanumeric characters.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" formControlName="gender">
+          <option value="F">Female</option>
+          <option value="M">Male</option>
+        </select>
+        <div
+          *ngIf="
+            editForm.get('gender')?.invalid && editForm.get('gender')?.touched
+          "
+          class="error-message"
+        >
+          Please select a valid gender.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="image_url">Image URL</label>
+        <input id="image_url" formControlName="image_url" type="text" />
+        <div
+          *ngIf="
+            editForm.get('image_url')?.invalid &&
+            editForm.get('image_url')?.touched
+          "
+          class="error-message"
+        >
+          Please enter a valid image URL (must end with .jpg or .png).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input id="description" formControlName="description" type="text" />
+        <div
+          *ngIf="
+            editForm.get('description')?.invalid &&
+            editForm.get('description')?.touched
+          "
+          class="error-message"
+        >
+          Description must be between 10 and 500 characters and can contain only
+          basic punctuation.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input id="price" formControlName="price" type="number" />
+        <div
+          *ngIf="
+            editForm.get('price')?.invalid && editForm.get('price')?.touched
+          "
+          class="error-message"
+        >
+          Price must be a valid number between 1 and 100,000.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input id="quantity" formControlName="quantity" type="number" />
+        <div
+          *ngIf="
+            editForm.get('quantity')?.invalid &&
+            editForm.get('quantity')?.touched
+          "
+          class="error-message"
+        >
+          Quantity must be a valid whole number between 1 and 1000.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="editForm.invalid">
+        Update Product
+      </button>
+    </form>
+  </div>
+</div>

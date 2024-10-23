@@ -1,0 +1,22 @@
+<div class="navbar">
+  <div class="nav-links">
+    <a class="admin" href="/">Home</a>
+
+    <button class="logout" (click)="logout()">Logout</button>
+  </div>
+</div>
+
+<div>
+  <h1>Admin Dashboard</h1>
+  <nav>
+    <ul>
+      <li>
+        <a routerLink="product-management">Product Management</a>
+      </li>
+      <li>
+        <a routerLink="user-visualization">User Visualization</a>
+      </li>
+    </ul>
+  </nav>
+  <router-outlet></router-outlet>
+</div>
